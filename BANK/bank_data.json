@@ -9,5 +9,16 @@
         "occupation": "student",
         "password": "Tanz@123",
         "pin": 8162
+    },
+    "12345678909769": {
+        "name": "Harjot Singh",
+        "dob": "2006-01-20",
+        "email": "harjot123@gmail.com",
+        "phone_number": "+919797410969",
+        "address": "baramulla,jammu and kashmir",
+        "income": "below 10000",
+        "occupation": "student",
+        "password": "Harj@123",
+        "pin": 9079
     }
 }

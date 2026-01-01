@@ -1,17 +1,141 @@
 import json
 from datetime import date
 import re
-print(date.today())
+import random
+
 try:
-    with open('bank_data','r') as f:
+    with open('bank_data.json','r') as f:
         bank_data=json.load(f)
 except (FileNotFoundError,json.JSONDecodeError):
     bank_data=[]
 
 
+def main():
+    print('Register')
+    name=name_input()
+    dob=valid_dob().isoformat()
+    email=valid_email()
+    phone_number=number()
+    address_=address()
+    income_=income()
+    occupation=input('Enter occupation: ').strip()
+    account_no=get_account_no()
+    bank_data.append({account_no:{'name':name,
+                      'dob':dob,
+                      'email':email,
+                      'phone_number':phone_number,
+                      'address':address_,
+                      'income':income_,
+                      'occupation':occupation,}})
+    data_save()
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def number():
+    while True:
+        phone_pattern=r'^\+\d{1,3}\d{6,14}$'
+        phone_number=input('Enter a Phone number: ')
+        if re.fullmatch(phone_pattern,phone_number):
+            return phone_number
+        else:
+            print('Invalid Phone Number')
+            continue
 
 def valid_dob():
     while True:
@@ -39,11 +163,11 @@ def valid_dob():
 
 
 
-def valid_email(email):
+def valid_email():
     while True:
         email=input("Enter your email: ").strip()
         email_pattern=r'^[\w.-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$'
-        if re.match(email_pattern,email):
+        if re.fullmatch(email_pattern,email):
             return email
         else:
             print("Please enter a valid email.")
@@ -52,18 +176,17 @@ def valid_email(email):
 
 
 
-#name\dob\mobile\email\address\occupation\income_range
 
-with open('bank_data','w') as f:
-    json.dump(bank_data,f,indent=4)
+
+
 
 
 #name
 def name_input():
-    name=input("ENTER YOUR NAME:")
-    while not name.isalpha():
-        name=input("ENTER VALID NAME:")
-    return name
+    name=input("ENTER YOUR NAME: ")
+    while not name.replace(' ','').isalpha():
+        name=input("ENTER VALID NAME: ")
+    return name.title()
 
 
 #address 
@@ -96,7 +219,7 @@ def address():
         input_state=input("VALID STATE: ").lower()
     while input_district not in dist:
          input_district=input("DISTRICT: ").lower()
-    return (input_state,input_district)
+    return ','.join([input_district,input_state])
 
 
 #income range
@@ -112,24 +235,27 @@ def income():
     print("\nYOUR MONTHLY INCOME RANGE:")
     for key,value in income_range.items():
         print(f"{key}.{value}")
-    choice=(input("ENTER YOUR CHOICE:"))
+
     while True:
         try:
-            choice = int(input("ENTER OPTION (1-7): "))
-            if 1 < choice <len(income_range):
+            choice = int(input("ENTER OPTION (0-6): "))
+            if 0 <= choice <len(income_range):
                 return income_range[choice]
             else:
-                print("PLEASE SELECT A VALID OPTION (1-7)")
+                print("PLEASE SELECT A VALID OPTION (0-6)")
         except ValueError:
             print("PLEASE ENTER A NUMBER ONLY")
 
-income()
 
+def data_save():
+    with open('bank_data.json','w') as f:
+        json.dump(bank_data,f,indent=4)
 
-
-
-
-
+def get_account_no():
+    last=str(random.randint(1000,9999))
+    account_no='1234567890'+last
+    return int(account_no)
+main()
 
 
 

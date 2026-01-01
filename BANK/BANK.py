@@ -115,6 +115,46 @@ def logged_in(acc_no):
             print('Invalid choice')
             continue
 
+
+
+    
+    
+
+
+
+    
+
+def withdraw(user, acc_no):
+    amount = int(input("Enter the amount: "))
+    while amount <= 0:
+        amount = int(input("Enter valid amount: "))
+    if amount > user["balance"]:
+        print("INSUFFICIENT BALANCE")
+        return
+    user["balance"] -= amount
+    bank_data[acc_no]["balance"] = user["balance"]
+    print("Withdrawal successful")
+    print("Remaining balance:", user["balance"])
+    data_save()
+
+def deposit(user, acc_no):
+    amount = int(input("ENTER AMOUNT: "))
+
+    while amount <= 0:
+        amount = int(input("ENTER VALID AMOUNT: "))    
+    if "balance" not in user:
+        user["balance"] = 0
+    user["balance"] += amount
+    print("AMOUNT SUCCESSFULLY ADDED!")
+    print("CURRENT BALANCE:", user["balance"])
+
+    data_save()
+
+
+
+    
+    
+    
 def transfer(acc_no):
     to_acc_no=input('Enter receiver\'s account number: ').strip()
     try:

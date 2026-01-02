@@ -8,7 +8,8 @@
         "income": "below 10000",
         "occupation": "student",
         "password": "Tanz@123",
-        "pin": 8162
+        "pin": 8162,
+        "balance": 100000
     },
     "12345678909769": {
         "name": "Harjot Singh",
@@ -19,6 +20,7 @@
         "income": "below 10000",
         "occupation": "student",
         "password": "Harj@123",
-        "pin": 9079
+        "pin": 9079,
+        "balance": 0
     }
 }

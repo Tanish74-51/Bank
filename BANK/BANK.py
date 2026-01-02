@@ -2,7 +2,7 @@ import json
 from datetime import date
 import re
 import random
-import time
+
 
 try:
     with open('bank_data.json','r') as f:
@@ -74,55 +74,60 @@ def net_banking():
 def login():
     while True:
         print('Login')
-        while True:
-            phone_no_inp=input('Enter your phone number: ').strip()
-            user=None
-            for acc_no, details in bank_data.items():
-                if details['phone_number']==phone_no_inp:
-                    user=details
-                    break
-            password_check(user,acc_no)
-            if user is None:
-                print('Phone number not found. Try again.')
-                continue
+        phone_no_inp = input('Enter your phone number: ').strip()
 
-def password_check(user,acc_no):
+        user = None
+        acc_no = None
+
+        for acc, details in bank_data.items():
+            if details['phone_number'] == phone_no_inp:
+                user = details
+                acc_no = acc
+                break
+
+        if user is None:
+            print('Phone number not found. Try again.')
+            continue
+
+        password_check(user, acc_no)
+        return
+
+
+def password_check(user, acc_no):
+    if user is None:
+        print("User data missing")
+        return
+
     while True:
-        password_inp = input('Password: ')
-        if password_inp!=user['password']:
+        password_inp = input('Password: ').strip()
+        if password_inp != user.get('password'):
             print('Invalid password')
             continue
         else:
             print('ACCESS ALLOWED')
-            logged_in(acc_no)
+            logged_in(user, acc_no)
             return
 
-def logged_in(acc_no):
+
+def logged_in(user,acc_no):
     while True:
         print('''====== ACCOUNT INFO ======''')
         print(f'Account number: {acc_no}')
-        print('Withdraw: 1\nDeposit: 2\nTransfer: 3\nShow balance: 4')
+        print('Withdraw: 1\nDeposit: 2\nTransfer: 3\nShow balance: 4\nLog out: 5')
         choice=input('Enter your choice: ').strip()
         if choice=='1':
-            ...
+            withdraw(user,acc_no)
         elif choice=='2':
-            ...
+            deposit(user,acc_no)
         elif choice=='3':
             transfer(acc_no)
         elif choice=='4':
             print(bank_data[acc_no]['balance'])
+        elif choice=='5':
+            return
         else:
             print('Invalid choice')
             continue
-
-
-
-    
-    
-
-
-
-    
 
 def withdraw(user, acc_no):
     amount = int(input("Enter the amount: "))
@@ -156,24 +161,37 @@ def deposit(user, acc_no):
     
     
 def transfer(acc_no):
-    to_acc_no=input('Enter receiver\'s account number: ').strip()
+    acc_no=str(acc_no)
+    to_acc_no=input("Enter receiver's account number: ").strip()
+    if to_acc_no not in bank_data:
+        print("Receiver account does not exist")
+        return
     try:
-        amount=int(input("Enter amount: $").strip())
+        amount = int(input("Enter amount: $").strip())
     except ValueError:
         print("Invalid amount")
         return
-    if bank_data[acc_no]['balance']<amount:
+    if amount<=0:
+        print("Amount must be greater than zero")
+        return
+    if bank_data[acc_no]['balance'] < amount:
         print("Insufficient balance")
         return
-    ask_pin=int(input('Enter your pin: ').strip())
-    if ask_pin!=bank_data[to_acc_no]['pin']:
-        print('Incorrect pin')
+    try:
+        ask_pin = int(input("Enter your pin: ").strip())
+    except ValueError:
+        print("Invalid pin format")
+        return
+    if ask_pin != bank_data[acc_no]['pin']:
+        print("Incorrect pin")
+        return
     bank_data[acc_no]['balance']-=amount
-    if to_acc_no in bank_data:
-        bank_data[to_acc_no]['balance']+=amount
-    else:
-        pass
-    print('Transfer complete')
+    bank_data[to_acc_no]['balance']+=amount
+    data_save()
+    print("Transfer complete")
+
+
+
 
 
 
@@ -419,7 +437,7 @@ def data_save():
 def get_account_no():
     last=str(random.randint(1000,9999))
     account_no='1234567890'+last
-    return int(account_no)
+    return account_no
 main()
 
 
